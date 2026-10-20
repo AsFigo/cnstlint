@@ -21,6 +21,7 @@ from rules.af_func_cnst_dist_col_eq import FuncCnstDistColEq
 from rules.af_func_cnst_dist_col_sl import FuncCnstDistColSl
 from rules.af_cnst_additive_overflow import CnstAdditiveOverflowInBound
 from rules.af_cnst_dist_no_solve_before import CnstDistNoSolveBefore
+from rules.af_cnst_dist_fractional_weight import CnstDistFractionalWeight
 from rules.af_cnst_dist_on_enum import CnstDistOnEnumType
 from rules.af_cnst_foreach_unguarded_prev import CnstForeachUnguardedPrevIdx
 from rules.af_cnst_name_convention import CnstNameConvention

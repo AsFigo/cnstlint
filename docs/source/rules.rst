@@ -590,3 +590,32 @@ The ``unique`` constraint must not operate on a single row slice of a multi-dime
     }
 
 **Severity**: ERROR
+
+----
+
+.. _CNST_DIST_FRACTIONAL_WEIGHT:
+
+CNST_DIST_FRACTIONAL_WEIGHT
+---------------------------
+
+``dist`` weights must be integer expressions: no real literals and no division.
+
+**Rationale**: Integer division truncates toward zero, so a weight of ``1/2``
+evaluates to 0 and the value is never picked. Real weights such as ``0.5`` are
+tool-dependent: some simulators round them, others error out. A fractional
+weight on a range with ``:=`` is usually an attempt to spread one unit of
+weight across the range, which is what ``:/`` does.
+
+**Violation**::
+
+    constraint c { data dist {111 := 1/2, 222 := 1/2, 333 := 1}; }  // 333 always
+    constraint c { data dist {111 := 0.5, 222 := 0.5, 333 := 1}; }  // tool-dependent
+    constraint c { data dist {[0:10] := 1/11, 12 := 1}; }           // 12 always
+
+**Correct usage**::
+
+    constraint c { data dist {111 := 25, 222 := 25, 333 := 50}; }
+    constraint c { data dist {[0:10] :/ 1, 12 := 1}; }
+
+**Severity**: ERROR for real weights and literal divisions that truncate to 0;
+WARNING for other truncating or non-constant divisions.
